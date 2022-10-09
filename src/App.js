@@ -1,23 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { nanoid } from "nanoid";
+import NoteList from "./components/NoteList";
+import SearchBar from "./components/SearchBar";
+import Header from "./components/Header";
 
 function App() {
+  const [searchText, setSearchText] = useState("");
+  const [savedNotes] = useState(localStorage.getItem("react-notes-app-data"));
+  const [notes, setNotes] = useState(savedNotes ? JSON.parse(savedNotes) : []);
+
+  useEffect(() => {
+    localStorage.setItem("react-notes-app-data", JSON.stringify(notes));
+  }, [notes]);
+
+  const addNote = (text) => {
+    const date = new Date();
+    const newNote = {
+      id: nanoid(),
+      text: text,
+      date: date.toLocaleDateString(),
+    };
+    const newNotes = [...notes, newNote];
+    setNotes(newNotes);
+  };
+
+  const deleteNote = (id) => {
+    const newNotes = notes.filter((note) => note.id !== id);
+    setNotes(newNotes);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <SearchBar searchText={searchText} setSearchText={setSearchText} />
+      <NoteList
+        notes={notes.filter((note) =>
+          note.text.toLowerCase().includes(searchText)
+        )}
+        handleAddNote={addNote}
+        handleDeleteNote={deleteNote}
+      />
     </div>
   );
 }
