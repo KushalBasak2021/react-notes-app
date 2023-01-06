@@ -39,6 +39,7 @@ function App() {
         )}
         handleAddNote={addNote}
         handleDeleteNote={deleteNote}
+        searchText={searchText}
       />
     </div>
   );

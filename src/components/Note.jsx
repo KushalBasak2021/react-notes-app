@@ -1,9 +1,10 @@
 import React from "react";
 
-const Note = ({ note, handleDeleteNote }) => {
+const Note = ({ note, handleDeleteNote, searchText }) => {
   function handleTrashClick() {
     handleDeleteNote(note.id);
   }
+
   return (
     <div className="note">
       <p>{note.text}</p>
